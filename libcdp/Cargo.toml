@@ -1,0 +1,24 @@
+[package]
+name = "libcdp"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "libcdp"
+path = "src/lib.rs"
+
+[dependencies]
+rumqttd = "0.7"
+tokio = { version = "1.9", features = ["full"] }
+futures = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "0.8", features = ["serde", "v4"] }
+config = "0.11"
+url = { version = "2.2", features = ["serde"] }
+
+[dependencies.reqwest]
+version = "0.11"
+features = ["gzip", "deflate", "json"]

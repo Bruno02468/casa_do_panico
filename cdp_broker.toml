@@ -1,0 +1,16 @@
+# Some basic topics.
+topics = ["temperature"]
+# Some random password for testing.
+home_key = "senhorges"
+# Local endpoint for testing.
+endpoint = "https://vps.bor.gs/lr/"
+# An alright bundle size.
+bundle_size = 10
+# An alright bundle timeout.
+bundle_timeout_msec = 5000
+# An alright buffer size.
+buffer_size_bundles = 10
+# An alright heartbeat interval.
+heartbeat_interval_secs = 30
+# You should definitely change that.
+uid = "7efe2290-7b6d-42a2-92e0-9fe279f0a181"

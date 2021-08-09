@@ -1,0 +1,20 @@
+[package]
+name = "cdp_api"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.9", features = ["full"] }
+futures = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "0.8", features = ["serde", "v4"] }
+config = "0.11"
+url = { version = "2.2", features = ["serde"] }
+actix-web = "3.3"
+
+[dependencies.libcdp]
+version = "0.1"
+path = "../libcdp/"

@@ -1,0 +1,2 @@
+[workspace]
+members = ["libcdp", "cdp_broker", "cdp_api"]
