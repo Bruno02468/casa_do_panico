@@ -71,7 +71,7 @@ impl Broker {
 
   /// Send a small request to the API to see if it's up.
   pub(crate) async fn heartbeat(&self) -> bool {
-    let tgt = self.cfg.endpoint.join("/heartbeat").expect("Bad endpoint URL?");
+    let tgt = self.cfg.endpoint.join("heartbeat").expect("Bad endpoint URL?");
     let client = reqwest::Client::new();
     let maybe_resp = client
       .post(tgt)
@@ -104,7 +104,7 @@ impl Broker {
     if require_size && bnd.len() < self.cfg.bundle_size { return false; };
     println!("Sending bundle!");
     bnd.iter_mut().for_each(|msg| msg.sent_when = Some(Local::now()));
-    let tgt = self.cfg.endpoint.join("/bundle").expect("Bad endpoint URL?");
+    let tgt = self.cfg.endpoint.join("bundle").expect("Bad endpoint URL?");
     let cl = Client::new();
     let maybe_resp = cl
       .post(tgt)

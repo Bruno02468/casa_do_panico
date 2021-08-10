@@ -3,7 +3,7 @@ topics = ["temperature"]
 # Some random password for testing.
 home_key = "senhorges"
 # Local endpoint for testing.
-endpoint = "http://localhost:9869/"
+endpoint = "https://bor.gs/cdp_api/"
 # An alright bundle size.
 bundle_size = 10
 # An alright bundle timeout.

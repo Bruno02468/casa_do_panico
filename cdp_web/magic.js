@@ -1,7 +1,7 @@
 // its 3am lmao
 
 const endpoint = "/cdp_api";
-const fetch_ival = 2000;
+const fetch_ival = 5000;
 let per_broker = {};
 let msgs = [];
 
@@ -11,8 +11,10 @@ function fetch_the_goods() {
     .then(resp => resp.json()).then(function(json) {
       msgs = json;
       per_broker = {}
-      for (msg in msgs) {
-        const bid = msg["broker_id"];
+      for (let msg of msgs) {
+        console.log(msg);
+        let bid = msg["broker_id"];
+        console.log(bid);
         if (!per_broker.hasOwnProperty(bid)) {
           per_broker[bid] = [];
         }
