@@ -113,7 +113,7 @@ function rechart(msgarr, lastn, topic, chart) {
     let flats = flats_per_sensor[sensor_id];
     flats.reverse();
     let dataset = {
-      label: "Sensor #" + sensor_id,
+      label: "Sensor #" + (sensor_id+1),
       data: [],
       borderColor: color(),
       showLine: false,

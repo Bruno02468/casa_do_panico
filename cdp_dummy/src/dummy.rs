@@ -47,8 +47,9 @@ impl Dummy {
     let (mut client, mut cxn) = Client::new(opts, 10);
     self.thread = Some(thread::spawn(move || {
       let (mut oks, mut fails): (usize, usize) = (0, 0);  
+      let mut rng = rand::thread_rng();
       loop {
-        let pld = cfg.gen_payload(cid);
+        let pld = cfg.gen_payload(cid, &mut rng);
         let res = client.publish(
           cfg.topic.to_string(),
           QoS::AtMostOnce,
@@ -74,7 +75,7 @@ impl Dummy {
             if fails > 10 { break; }
           },
         };
-        thread::sleep(cfg.gen_interval());
+        thread::sleep(cfg.gen_interval(&mut rng));
       }
       return (oks, fails);
     }));

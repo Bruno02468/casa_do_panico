@@ -9,7 +9,7 @@ use std::time::Duration;
 use config::{Config, ConfigError};
 use libcdp::comm::sensor_broker::SensorType;
 use rand::Rng;
-use rand::prelude::SliceRandom;
+use rand::prelude::{SliceRandom, ThreadRng};
 use serde::{Serialize, Deserialize};
 
 /// Dummy sensor mode of operation.
@@ -110,10 +110,10 @@ pub(crate) struct DummyConfig {
 
 impl DummyConfig {
   /// Generate an interval based on jitter and such.
-  pub(crate) fn gen_interval(&self) -> Duration {
+  pub(crate) fn gen_interval(&self, rng: &mut ThreadRng) -> Duration {
     let range = 0u128 .. self.interval_jitter.as_millis(); 
-    let mut jitter = rand::thread_rng().gen_range(range) as i128;
-    if rand::thread_rng().gen_bool(0.5) { jitter *= -1; };
+    let mut jitter = rng.gen_range(range) as i128;
+    if rng.gen_bool(0.5) { jitter *= -1; };
     let total = jitter + self.interval.as_millis() as i128;
     let clamped: u128 = if total < 0 { 0 } else { total as u128 };
     return Duration::from_millis(
@@ -122,9 +122,10 @@ impl DummyConfig {
   }
 
   /// Generate a random payload. Optionally override first byte (ID).
-  pub(crate) fn gen_payload(&self, id_override: Option<u8>) -> Vec<u8> {
-    let mut payload = self.payloads
-      .choose(&mut rand::thread_rng()).unwrap().clone();
+  pub(crate) fn gen_payload(
+    &self, id_override: Option<u8>, rng: &mut ThreadRng
+  ) -> Vec<u8> {
+    let mut payload = self.payloads.choose(rng).unwrap().clone();
     if let Some(b) = id_override {
       if payload.len() > 0 {
         payload.remove(0);
@@ -133,7 +134,6 @@ impl DummyConfig {
     }
     return payload;
   }
-
 }
 
 /// Errors that can be found when parsing a config file.

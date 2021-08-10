@@ -1,5 +1,5 @@
 # Some basic topics.
-topics = ["temperature"]
+topics = ["temperature", "humidity"]
 # Some random password for testing.
 home_key = "senhorges"
 # Local endpoint for testing.
