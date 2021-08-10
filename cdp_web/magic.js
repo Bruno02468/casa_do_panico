@@ -92,7 +92,7 @@ function rechart(msgarr, lastn, topic) {
   let labels = [];
   let datasets = [];
   let flats_per_sensor = {};
-  let index = msgarr.length()-1;
+  let index = msgarr.length-1;
   while (index >= 0 && flats.length < lastn) {
     let flat = msgarr[index]["flat"];
     if (flat["topic"] == topic) {
