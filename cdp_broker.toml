@@ -5,7 +5,7 @@ home_key = "senhorges"
 # Local endpoint for testing.
 endpoint = "https://bor.gs/cdp_api/"
 # An alright bundle size.
-bundle_size = 10
+bundle_size = 30
 # An alright bundle timeout.
 bundle_timeout_msec = 5000
 # An alright buffer size.

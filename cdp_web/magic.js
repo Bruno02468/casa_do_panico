@@ -5,7 +5,7 @@ const sel_topic = document.getElementById("sel_topic");
 const chart_canvas = document.getElementById("chart_canvas");
 const in_lastn = document.getElementById("in_lastn");
 const endpoint = "/cdp_api";
-const fetch_ival = 2000;
+const fetch_ival = 3000;
 let per_broker = {};
 let msgs = [];
 

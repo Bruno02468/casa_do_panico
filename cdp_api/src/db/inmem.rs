@@ -86,68 +86,68 @@ impl<T> From<PoisonError<T>> for InMemoryDatabaseError {
 }
 
 impl ApiDatabase for InMemoryApiDatabase {
-    type DbError = InMemoryDatabaseError;
-    type BrokerMessageIter = Box<dyn Iterator<Item=BrokerMessage>>;
-    type SensorMessageIter = Box<dyn Iterator<Item=AnySensorMessage>>;
-    type DbConfig = ();
+  type DbError = InMemoryDatabaseError;
+  type BrokerMessageIter = Box<dyn Iterator<Item=BrokerMessage>>;
+  type SensorMessageIter = Box<dyn Iterator<Item=AnySensorMessage>>;
+  type DbConfig = ();
 
-    fn db_type(&self) -> super::ApiDatabaseType {
-      return super::ApiDatabaseType::InMemory;
-    }
+  fn db_type(&self) -> super::ApiDatabaseType {
+    return super::ApiDatabaseType::InMemory;
+  }
 
-    /// Same as default, I guess.
-    fn init(&self, _: Self::DbConfig) -> Result<Self, Self::DbError> {
-      return Ok(Self{
-        backing: Arc::new(Mutex::new(UnderlyingData::new(None.into_iter())))
+  /// Same as default, I guess.
+  fn init(&self, _: Self::DbConfig) -> Result<Self, Self::DbError> {
+    return Ok(Self{
+      backing: Arc::new(Mutex::new(UnderlyingData::new(None.into_iter())))
+    })
+  }
+
+  /// No one-time setup needed, I guess
+  fn setup(&self) {}
+
+  fn topics(&self) -> Result<HashSet<SensorType>, Self::DbError> {
+    let d = self.backing.lock()?;
+    return Ok(d.topics.clone());
+  }
+
+  fn update_topics<T>(&self, new_topics: T) -> Result<(), Self::DbError>
+  where T: IntoIterator<Item=SensorType> {
+    let mut d = self.backing.lock()?;
+    d.topics.clear();
+    d.topics.extend(new_topics);
+    return Ok(());
+  }
+
+  fn messages_by_type(&self, mtype: BrokerMessagePayloadType)
+  -> Result<Self::BrokerMessageIter, Self::DbError> {
+    let d = self.backing.lock()?;
+    return Ok(Box::new(d.messages
+      .clone()
+      .into_iter()
+      .filter_map(move |m|
+        if m.payload_type() == mtype { Some(m.clone()) } else { None }
+      )
+    ));
+  }
+
+  fn sensor_messages_by_type(&self, stype: SensorType)
+  -> Result<Self::SensorMessageIter, Self::DbError> {
+    let d = self.backing.lock()?;
+    return Ok(Box::new(d.messages
+      .clone()
+      .into_iter()
+      .filter_map(move |msg| match msg.payload {
+        BrokerMessagePayload::SensorData(sd) => {
+          if sd.sensor_type() == stype { Some(sd) } else { None }
+        }
+        _ => None,
       })
-    }
+    ));
+  }
 
-    /// No one-time setup needed, I guess
-    fn setup(&self) {}
-
-    fn topics(&self) -> Result<HashSet<SensorType>, Self::DbError> {
-      let d = self.backing.lock()?;
-      return Ok(d.topics.clone());
-    }
-
-    fn update_topics<T>(&self, new_topics: T) -> Result<(), Self::DbError>
-    where T: IntoIterator<Item=SensorType> {
-      let mut d = self.backing.lock()?;
-      d.topics.clear();
-      d.topics.extend(new_topics);
-      return Ok(());
-    }
-
-    fn messages_by_type(&self, mtype: BrokerMessagePayloadType)
-    -> Result<Self::BrokerMessageIter, Self::DbError> {
-      let d = self.backing.lock()?;
-      return Ok(Box::new(d.messages
-        .clone()
-        .into_iter()
-        .filter_map(move |m|
-          if m.payload_type() == mtype { Some(m.clone()) } else { None }
-        )
-      ));
-    }
-
-    fn sensor_messages_by_type(&self, stype: SensorType)
-    -> Result<Self::SensorMessageIter, Self::DbError> {
-      let d = self.backing.lock()?;
-      return Ok(Box::new(d.messages
-        .clone()
-        .into_iter()
-        .filter_map(move |msg| match msg.payload {
-          BrokerMessagePayload::SensorData(sd) => {
-            if sd.sensor_type() == stype { Some(sd) } else { None }
-          }
-          _ => None,
-        })
-      ));
-    }
-
-    fn insert_message(&self, msg: BrokerMessage) -> Result<(), Self::DbError> {
-      let mut d = self.backing.lock()?;
-      d.messages.push(msg);
-      return Ok(());
-    }
+  fn insert_message(&self, msg: BrokerMessage) -> Result<(), Self::DbError> {
+    let mut d = self.backing.lock()?;
+    d.messages.push(msg);
+    return Ok(());
+  }
 }
