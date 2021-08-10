@@ -126,7 +126,6 @@ impl DummyConfig {
     &self, id_override: Option<u8>, rng: &mut ThreadRng
   ) -> Vec<u8> {
     let mut payload = self.payloads.choose(rng).unwrap().clone();
-    println!("{}, {:#?}", self.payloads.len(), payload);
     if let Some(b) = id_override {
       if payload.len() > 0 {
         payload.remove(0);

@@ -78,7 +78,7 @@ function simpleflat(msg) {
   for (let kn in sd) {
     let inner = sd[kn];
     flat["topic"] = kn.toLowerCase();
-    flat["sensor_id"] = inner["sensor_id"];
+    flat["sensor_id"] = parseInt(inner["sensor_id"]);
     for (let kkn in inner) {
       if (kkn == "sensor_id") continue;
       flat["value"] = inner[kkn];
@@ -128,7 +128,7 @@ function rechart(msgarr, lastn, topic, chart) {
     }
     chart.data.datasets.push(dataset);
   }
-  chart.data.labels = labels;
+  chart.data.labels = labels.map((v, i, a) => v.toString().substr(0, 33));
   chart.update(0);
 }
 
