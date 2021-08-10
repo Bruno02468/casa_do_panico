@@ -1,12 +1,26 @@
 // its 3am lmao
 
 const sel_broker = document.getElementById("sel_broker");
+const sel_topic = document.getElementById("sel_topic");
 const chart_canvas = document.getElementById("chart_canvas");
 const in_lastn = document.getElementById("in_lastn");
 const endpoint = "/cdp_api";
 const fetch_ival = 5000;
 let per_broker = {};
 let msgs = [];
+
+// some colors lol
+const colors = [
+  "red", "green", "orange", "blue", "purple", "cyan", "magenta", "lime",
+  "darkgreen"
+];
+
+let icor = 0;
+function color() {
+  let c = colors[icor % colors.length];
+  icor++;
+  return c;
+}
 
 // fetch the goods
 function fetch_the_goods() {
@@ -25,6 +39,7 @@ function fetch_the_goods() {
     });
   console.log("fetched", msgs.length);
   update_brokers();
+  u(true);
 }
 
 // auto fetch yay
@@ -59,9 +74,14 @@ function simpleflat(msg) {
   const supp = ["Temperature", "Humidity"]
   let sd = msg["payload"]["SensorData"];
   for (let kn in sd) {
+    let inner = sd[kn];
     flat["topic"] = kn.toLowerCase();
-    flat["sensor_id"] = sd[kn]["sensor_id"];
-    flat["value"] = sd[kn][flat["topic"]];
+    flat["sensor_id"] = inner["sensor_id"];
+    for (let kkn in inner) {
+      if (kkn == "sensor_id") continue;
+      flat["value"] = inner[kkn];
+    }
+    flat["when"] = new Date(msg["constructed_when"]);
   }
   msg["flat"] = flat;
 }
@@ -69,5 +89,48 @@ function simpleflat(msg) {
 // a chart do-over!
 function rechart(msgarr, lastn, topic) {
   let labels = [];
+  let datasets = [];
+  let flats_per_sensor = {};
+  let index = msgarr.length()-1;
+  while (index >= 0 && flats.length < lastn) {
+    let flat = msgarr[index]["flat"];
+    if (flat["topic"] == topic) {
+      let sid = flat["sensor_id"];
+      if (!flats_per_sensor.hasOwnProperty(sid)) flats_per_sensor[sid] = [];
+      flats_per_sensor[sid].push(flat);
+      labels.push(flat["when"]);
+    }
+    index--;
+  }
+  labels.sort();
+  icor = 0;
+  chart.data.datasets = [];
+  for (let sensor_id in flats_per_sensor) {
+    let flats = flats_per_sensor[sensor_id];
+    flats.reverse();
+    let dataset = {
+      label: "Sensor #" + sensor_id,
+      data: [],
+      borderColor: color(),
+      fill: false
+    };
+    let bytime = {};
+    for (let sf of flats) {
+      bytime[sf["when"]] = sf["value"];
+    }
+    for (let time of labels) {
+      dataset.data.push(bytime[time]);
+    }
+    chart.data.datasets.push(dataset)
+  }
+  chart.update(0);
+}
 
+// the real goods: update stuff
+function u(was_auto) {
+  let broker = sel_broker.value;
+  let lastn = in_lastn.value;
+  let topic = sel_topic.value;
+  let msgarr = per_broker[broker] || [];
+  rechart(msgarr, lastn, topic);
 }
