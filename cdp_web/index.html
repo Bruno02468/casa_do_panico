@@ -34,13 +34,17 @@
           choose topic:
           <select id="sel_type" onchange="u(false);">
             <option value="temperature">temperature</option>
-            <option value="humidity">temperature</option>
+            <option value="humidity">humidity</option>
           </select>
+          <br>
+          last N messages:
+          <input id="in_lastn" type="number" min="1" max="100" step="1"
+          value="10">
         </div>
       </div>
       <div class="row center">
         <div class="twelve columns">
-          <canvas id="grafico"></canvas>
+          <canvas id="chart_canvas"></canvas>
         </div>
       </div>
     </div>

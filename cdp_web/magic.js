@@ -1,6 +1,8 @@
 // its 3am lmao
 
 const sel_broker = document.getElementById("sel_broker");
+const chart_canvas = document.getElementById("chart_canvas");
+const in_lastn = document.getElementById("in_lastn");
 const endpoint = "/cdp_api";
 const fetch_ival = 5000;
 let per_broker = {};
@@ -13,6 +15,7 @@ function fetch_the_goods() {
       msgs = json;
       per_broker = {}
       for (let msg of msgs) {
+        simpleflat(msg);
         let bid = msg["broker_id"];
         if (!per_broker.hasOwnProperty(bid)) {
           per_broker[bid] = [];
@@ -23,6 +26,9 @@ function fetch_the_goods() {
   console.log("fetched", msgs.length);
   update_brokers();
 }
+
+// auto fetch yay
+setInterval(fetch_the_goods, fetch_ival);
 
 // updates the broker filter list
 function update_brokers() {
@@ -41,4 +47,27 @@ function update_brokers() {
   sel_broker.value = prev;
 }
 
-setInterval(fetch_the_goods, fetch_ival);
+let chart = new Chart(chart_canvas.getContext("2d"), {
+  type: "line",
+  responsive: true,
+  data: {}
+});
+
+// we a lil' flattening
+function simpleflat(msg) {
+  let flat = {};
+  const supp = ["Temperature", "Humidity"]
+  let sd = msg["payload"]["SensorData"];
+  for (let kn in sd) {
+    flat["topic"] = kn.toLowerCase();
+    flat["sensor_id"] = sd[kn]["sensor_id"];
+    flat["value"] = sd[kn][flat["topic"]];
+  }
+  msg["flat"] = flat;
+}
+
+// a chart do-over!
+function rechart(msgarr, lastn, topic) {
+  let labels = [];
+
+}
