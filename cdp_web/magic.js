@@ -24,7 +24,7 @@ function color() {
 
 // le chart
 chart = new Chart(chart_canvas.getContext("2d"), {
-  type: "scatter",
+  type: "line",
   responsive: true,
   data: {}
 });
@@ -116,6 +116,7 @@ function rechart(msgarr, lastn, topic, chart) {
       label: "Sensor #" + sensor_id,
       data: [],
       borderColor: color(),
+      showLine: false,
       fill: false
     };
     let bytime = {};
