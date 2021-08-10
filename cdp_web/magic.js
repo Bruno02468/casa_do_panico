@@ -116,15 +116,15 @@ function rechart(msgarr, lastn, topic, chart) {
       label: "Sensor #" + (sensor_id+1),
       data: [],
       borderColor: color(),
-      showLine: false,
-      fill: false
+      fill: false,
+      spanGaps: true
     };
     let bytime = {};
     for (let sf of flats) {
       bytime[sf["when"]] = sf["value"];
     }
     for (let time of labels) {
-      dataset.data.push(bytime[time]);
+      dataset.data.push(bytime[time] || null);
     }
     chart.data.datasets.push(dataset);
   }

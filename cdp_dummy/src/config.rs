@@ -126,6 +126,7 @@ impl DummyConfig {
     &self, id_override: Option<u8>, rng: &mut ThreadRng
   ) -> Vec<u8> {
     let mut payload = self.payloads.choose(rng).unwrap().clone();
+    println!("{}, {:#?}", self.payloads.len(), payload);
     if let Some(b) = id_override {
       if payload.len() > 0 {
         payload.remove(0);
@@ -183,11 +184,12 @@ impl TryFrom<DummyConfigFile> for DummyConfig {
         .into_iter()
         .map(|(v, bl): (usize, u8)| {
           // weirdo routine to convert usize to zero-padded Vec<u8>
-          let mut vec = v.to_ne_bytes().to_vec();
+          let mut vec = v.to_le_bytes().to_vec();
           vec.truncate(bl.into());
           while vec.len() < bl.into() {
             vec.insert(0, 0);
           }
+          vec.reverse();
           return vec;
         })
         .collect(),
