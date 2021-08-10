@@ -1,0 +1,12 @@
+# Same machine, I hope.
+broker_address = "localhost"
+broker_port = 1883
+mode = "random"
+values = [
+  [0x19012C, 3],
+  [0x19012A, 3],
+  [0x19012F, 3]
+]
+topic = "temperature"
+interval_msecs = 2000
+interval_jitter_msecs = 500

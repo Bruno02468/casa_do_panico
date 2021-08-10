@@ -97,8 +97,13 @@ impl Broker {
   /// reaches 10. Must be nice. We don't clear the bundle.
   /// It's up to the caller.
   async fn send_bundle(&self, require_size: bool) -> bool {
-    let bnd = self.lock_bundle().await;
-    if require_size && bnd.len() < self.cfg.bundle_size { return true };
+    let real_bnd = self.lock_bundle().await;
+    let mut bnd = real_bnd.clone();
+    std::mem::drop(real_bnd);
+    if bnd.len() == 0 { return false; }
+    if require_size && bnd.len() < self.cfg.bundle_size { return false; };
+    println!("Sending bundle!");
+    bnd.iter_mut().for_each(|msg| msg.sent_when = Some(Local::now()));
     let tgt = self.cfg.endpoint.join("/bundle").expect("Bad endpoint URL?");
     let cl = Client::new();
     let maybe_resp = cl
@@ -191,21 +196,26 @@ impl Broker {
           let msg = receiver.recv().await.expect("Inner channel closed!");
           let mut bnd = broker2.lock_bundle().await;
           bnd.push(msg);
+          while bnd.len() > broker2.cfg.bundle_size {
+            bnd.remove(0);
+          }
+          println!("Pushed to bundle, length is now {}!", bnd.len());
+          std::mem::drop(bnd);
           if broker2.send_bundle(true).await {
-            bnd.clear();
+            let mut bnd2 = broker2.lock_bundle().await;
+            bnd2.clear();
           }
         }
       });
       // message autosend thread. ensures we won't wait forever with a
       // non-full bundle.
       let msg_autosend_task = tokio::spawn(async move {
+        println!("Timer started!");
         loop {
-          tokio::time::sleep(
-            broker3.cfg.bundle_timeout
-              .to_std().expect("Bundle timeouts can't be negative!")
-          ).await;
-          let mut bnd = broker3.lock_bundle().await;
+          println!("Timer fired!");
+          tokio::time::sleep(broker3.cfg.bundle_timeout).await;
           if broker3.send_bundle(false).await {
+            let mut bnd = broker3.lock_bundle().await;
             bnd.clear();
           }
         }

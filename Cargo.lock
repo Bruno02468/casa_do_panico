@@ -501,6 +501,7 @@ dependencies = [
  "futures",
  "libcdp",
  "serde 1.0.127",
+ "serde_json",
  "tokio 1.9.0",
  "url",
  "uuid",

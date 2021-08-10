@@ -27,7 +27,9 @@ impl<D: ApiDatabase + 'static> Api<D> {
       App::new()
         .data(dbc.clone())
         .route("/", web::get().to(handlers::index::<D>))
-        .route("/heartbeat", web::post().to(handlers::heartbeat))
+        .route("/heartbeat", web::post().to(handlers::heartbeat::<D>))
+        .route("/bundle", web::post().to(handlers::bundle::<D>))
+        .route("/messages/sensor", web::get().to(handlers::all_sensor::<D>))
     });
     // bind to cfg'd addrs
     for addr in self.config.binds.iter() {

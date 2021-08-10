@@ -2,8 +2,8 @@
 
 use std::convert::{TryFrom, TryInto};
 use std::str::FromStr;
+use std::time::Duration;
 
-use chrono::Duration;
 use libcdp::comm::broker_api::HeartbeatMessage;
 use libcdp::comm::sensor_broker::SensorType;
 use reqwest::Url;
@@ -120,10 +120,10 @@ impl TryFrom<&BrokerConfigFile> for BrokerConfig {
       endpoint: cfg.endpoint_url()
         .map_err(|e| Self::Error::BadEndpointUrl(e))?,
       bundle_size: cfg.bundle_size,
-      bundle_timeout: Duration::milliseconds(cfg.bundle_timeout_msec as i64),
+      bundle_timeout: Duration::from_millis(cfg.bundle_timeout_msec as u64),
       buffer_size_bundles: cfg.buffer_size_bundles,
       heartbeat_interval: cfg.heartbeat_interval_secs
-        .map(|secs| Duration::seconds(secs as i64)),
+        .map(|secs| Duration::from_secs(secs as u64)),
       uid: Uuid::parse_str(&cfg.uid)
         .map_err(|e| Self::Error::BadBrokerUuid(e))?,
     });
