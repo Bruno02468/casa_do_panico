@@ -1,5 +1,6 @@
 // its 3am lmao
 
+const sel_broker = document.getElementById("sel_broker");
 const endpoint = "/cdp_api";
 const fetch_ival = 5000;
 let per_broker = {};
@@ -12,9 +13,7 @@ function fetch_the_goods() {
       msgs = json;
       per_broker = {}
       for (let msg of msgs) {
-        console.log(msg);
         let bid = msg["broker_id"];
-        console.log(bid);
         if (!per_broker.hasOwnProperty(bid)) {
           per_broker[bid] = [];
         }
@@ -22,6 +21,24 @@ function fetch_the_goods() {
       }
     });
   console.log("fetched", msgs.length);
+  update_brokers();
+}
+
+// updates the broker filter list
+function update_brokers() {
+  let prev = sel_broker.value;
+  sel_broker.innerHTML = "";
+  let opt = document.createElement("option");
+  opt.value = "";
+  opt.innerText = "[choose a broker]";
+  sel_broker.appendChild(opt);
+  for (const broker in per_broker) {
+    let bopt = document.createElement("option");
+    bopt.value = broker;
+    bopt.innerText = broker.substr(0, 4);
+    sel_broker.appendChild(bopt);
+  }
+  sel_broker.value = prev;
 }
 
 setInterval(fetch_the_goods, fetch_ival);
