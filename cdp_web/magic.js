@@ -134,7 +134,7 @@ function rechart(msgarr, lastn, topic, chart) {
 // the real goods: update stuff
 function u(was_auto) {
   let broker = sel_broker.value;
-  let lastn = in_lastn.value;
+  let lastn = parseInt(in_lastn.value);
   let topic = sel_topic.value;
   let msgarr = per_broker[broker] || [];
   rechart(msgarr, lastn, topic, chart);
