@@ -63,7 +63,7 @@ function update_brokers() {
   sel_broker.value = prev;
 }
 
-let chart = new Chart(chart_canvas.getContext("2d"), {
+chart = new Chart(chart_canvas.getContext("2d"), {
   type: "line",
   responsive: true,
   data: {}
