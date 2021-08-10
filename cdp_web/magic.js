@@ -93,14 +93,16 @@ function rechart(msgarr, lastn, topic, chart) {
   let labels = [];
   let datasets = [];
   let flats_per_sensor = {};
+  let added = 0;
   let index = msgarr.length-1;
-  while (index >= 0 && flats.length < lastn) {
+  while (index >= 0 && added < lastn) {
     let flat = msgarr[index]["flat"];
     if (flat["topic"] == topic) {
       let sid = flat["sensor_id"];
       if (!flats_per_sensor.hasOwnProperty(sid)) flats_per_sensor[sid] = [];
       flats_per_sensor[sid].push(flat);
       labels.push(flat["when"]);
+      added++;
     }
     index--;
   }
@@ -123,7 +125,8 @@ function rechart(msgarr, lastn, topic, chart) {
     for (let time of labels) {
       dataset.data.push(bytime[time]);
     }
-    chart.data.datasets.push(dataset)
+    chart.data.datasets.push(dataset);
+    console.log(dataset);
   }
   chart.update(0);
 }
