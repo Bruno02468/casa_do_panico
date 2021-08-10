@@ -1,12 +1,70 @@
-# Same machine, I hope.
+
+[dummies.1]
 broker_address = "localhost"
 broker_port = 1883
 mode = "random"
 values = [
-  [0x19012C, 3],
-  [0x19012A, 3],
-  [0x19012F, 3]
+  [0x01012C, 3],
+  [0x01012A, 3],
+  [0x01012F, 3]
 ]
 topic = "temperature"
+interval_msecs = 2000
+interval_jitter_msecs = 500
+
+[dummies.2]
+broker_address = "localhost"
+broker_port = 1883
+mode = "random"
+values = [
+  [0x020122, 3],
+  [0x020121, 3],
+  [0x020120, 3]
+]
+topic = "temperature"
+interval_msecs = 2000
+interval_jitter_msecs = 500
+
+[dummies.3]
+broker_address = "localhost"
+broker_port = 1883
+mode = "random"
+values = [
+  [0x0346, 2],
+  [0x0347, 2],
+  [0x0348, 2],
+  [0x0349, 2],
+  [0x0350, 2],
+  [0x0351, 2],
+  [0x0352, 2],
+  [0x0353, 2],
+  [0x0354, 2],
+  [0x0355, 2],
+  [0x0356, 2],
+  [0x0357, 2],
+]
+topic = "humidity"
+interval_msecs = 2000
+interval_jitter_msecs = 500
+
+[dummies.4]
+broker_address = "localhost"
+broker_port = 1883
+mode = "random"
+values = [
+  [0x0446, 2],
+  [0x0447, 2],
+  [0x0448, 2],
+  [0x0449, 2],
+  [0x0450, 2],
+  [0x0451, 2],
+  [0x0452, 2],
+  [0x0453, 2],
+  [0x0454, 2],
+  [0x0455, 2],
+  [0x0456, 2],
+  [0x0457, 2],
+]
+topic = "humidity"
 interval_msecs = 2000
 interval_jitter_msecs = 500
