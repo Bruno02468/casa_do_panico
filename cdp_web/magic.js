@@ -24,7 +24,7 @@ function color() {
 
 // le chart
 chart = new Chart(chart_canvas.getContext("2d"), {
-  type: "line",
+  type: "scatter",
   responsive: true,
   data: {}
 });

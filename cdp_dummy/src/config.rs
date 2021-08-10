@@ -9,6 +9,7 @@ use std::time::Duration;
 use config::{Config, ConfigError};
 use libcdp::comm::sensor_broker::SensorType;
 use rand::Rng;
+use rand::prelude::SliceRandom;
 use serde::{Serialize, Deserialize};
 
 /// Dummy sensor mode of operation.
@@ -122,8 +123,8 @@ impl DummyConfig {
 
   /// Generate a random payload. Optionally override first byte (ID).
   pub(crate) fn gen_payload(&self, id_override: Option<u8>) -> Vec<u8> {
-    let index = rand::thread_rng().gen_range(0..self.payloads.len());
-    let mut payload = self.payloads.get(index).unwrap().clone();
+    let mut payload = self.payloads
+      .choose(&mut rand::thread_rng()).unwrap().clone();
     if let Some(b) = id_override {
       if payload.len() > 0 {
         payload.remove(0);
