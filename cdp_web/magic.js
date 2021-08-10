@@ -126,8 +126,8 @@ function rechart(msgarr, lastn, topic, chart) {
       dataset.data.push(bytime[time]);
     }
     chart.data.datasets.push(dataset);
-    console.log(dataset);
   }
+  chart.data.labels = labels;
   chart.update(0);
 }
 
