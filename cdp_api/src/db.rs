@@ -3,9 +3,9 @@
 pub(crate) mod inmem;
 
 use std::collections::HashSet;
-use std::convert::TryFrom;
 use std::error::Error as StdError;
 use std::fmt::Display;
+use std::str::FromStr;
 
 use serde::{Serialize, Deserialize};
 
@@ -51,6 +51,14 @@ pub(crate) enum ApiDatabaseType {
   InMemory
 }
 
+impl ApiDatabaseType {
+  pub(crate) fn all_types() -> Vec<Self> {
+    return vec![
+      ApiDatabaseType::InMemory
+    ];
+  }
+}
+
 impl Display for ApiDatabaseType {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{}", match self {
@@ -59,13 +67,14 @@ impl Display for ApiDatabaseType {
   }
 }
 
-impl TryFrom<&str> for ApiDatabaseType {
-  type Error = ();
-
-  fn try_from(s: &str) -> Result<Self, Self::Error> {
-    return match s.to_lowercase().as_str() {
-      "in_memory" => Ok(ApiDatabaseType::InMemory),
-      _ => Err(())
+impl FromStr for ApiDatabaseType {
+  type Err = ();
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    for dbtype in Self::all_types() {
+      if dbtype.to_string() == s {
+        return Ok(dbtype);
+      }
     }
+    return Err(());
   }
 }

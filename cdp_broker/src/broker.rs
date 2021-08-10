@@ -1,8 +1,8 @@
 //! Implements functions related to communicating with the API, and abstracts
 //! away the whole "Broker" inner state.
 
+use std::str::FromStr;
 use std::sync::Arc;
-use std::convert::TryFrom;
 use std::thread;
 
 use chrono::{DateTime, Local};
@@ -146,7 +146,7 @@ impl Broker {
             eprintln!("LinkError when recv'ing message: {}", e.to_string());
           } else {
             let data = msg.unwrap();
-            let maybe_st = SensorType::try_from(data.topic.as_str());
+            let maybe_st = SensorType::from_str(data.topic.as_str());
             if let Ok(st) = maybe_st {
               if broker1.cfg.topics.contains(&st) {
                 // yeah we care about this. showtime!

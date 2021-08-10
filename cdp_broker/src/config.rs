@@ -1,6 +1,7 @@
 //! Broker configuration. Loading, structures, etc.
 
 use std::convert::{TryFrom, TryInto};
+use std::str::FromStr;
 
 use chrono::Duration;
 use libcdp::comm::broker_api::HeartbeatMessage;
@@ -106,7 +107,7 @@ impl TryFrom<&BrokerConfigFile> for BrokerConfig {
   fn try_from(cfg: &BrokerConfigFile) -> Result<Self, Self::Error> {
     let mut topics: Vec<SensorType> = Vec::new();
     for name in &cfg.topics {
-      match SensorType::try_from(name.as_str()) {
+      match SensorType::from_str(name.as_str()) {
         Ok(st) => topics.push(st),
         Err(_) => return Err(
           BrokerConfigParseError::BadSensorType(name.to_owned())

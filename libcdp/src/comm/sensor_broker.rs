@@ -3,6 +3,7 @@
 use std::convert::TryFrom;
 use std::fmt::Display;
 use std::error::Error;
+use std::str::FromStr;
 use serde::de::DeserializeOwned;
 use serde::{Serialize, Deserialize};
 
@@ -69,23 +70,15 @@ impl From<&AnySensorMessage> for SensorType {
   }
 }
 
-impl TryFrom<&str> for SensorType {
-  type Error = ();
-  fn try_from(s: &str) -> Result<Self, Self::Error> {
-    return match s.to_lowercase().as_str() {
-      "temperature" => Ok(Self::Temperature),
-      "humidity" => Ok(Self::Humidity),
-      _ => Err(())
+impl FromStr for SensorType {
+  type Err = ();
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    for stype in Self::all_types() {
+      if stype.to_string() == s {
+        return Ok(stype);
+      }
     }
-  }
-}
-
-impl TryFrom<String> for SensorType {
-  type Error = ();
-  fn try_from(mut s: String) -> Result<Self, Self::Error> {
-    // avoids realloc ;)
-    s.make_ascii_lowercase();
-    return Self::try_from(s.as_str());
+    return Err(());
   }
 }
 
@@ -147,10 +140,11 @@ impl TryFrom<&Vec<u8>> for TemperatureMessage {
     if data.len() != 3 {
       return Err(Self::Error::BadLength(3, data.len()));
     } else {
-      let (e1, e2, e3) = (data[0], data[1] as u16, data[3] as u16);
+      let (e1, e2, e3): (u8, u16, u16)
+        = (data[0], data[1] as u16, data[2] as u16);
       return Ok(Self {
         sensor_id: e1,
-        kelvin: e2 << 8 + e3
+        kelvin: ((e2 as u16) << 8) + e3
       });
     }
   }

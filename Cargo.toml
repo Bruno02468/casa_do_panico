@@ -1,2 +1,2 @@
 [workspace]
-members = ["libcdp", "cdp_broker", "cdp_api"]
+members = ["libcdp", "cdp_broker", "cdp_api", "cdp_dummy"]

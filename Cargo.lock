@@ -314,6 +314,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23b62fc65de8e4e7f52534fb52b0f3ed04746ae267519eef2a83941e8085068b"
 
 [[package]]
+name = "async-channel"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2114d64672151c0c5eaa5e131ec84a74f06e1e559830dabba01ca30605d66319"
+dependencies = [
+ "concurrent-queue",
+ "event-listener",
+ "futures-core",
+]
+
+[[package]]
 name = "async-compression"
 version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -510,6 +521,17 @@ dependencies = [
  "tokio 1.9.0",
  "url",
  "uuid",
+]
+
+[[package]]
+name = "cdp_dummy"
+version = "0.1.0"
+dependencies = [
+ "config",
+ "libcdp",
+ "rand 0.8.4",
+ "rumqttc",
+ "serde 1.0.127",
 ]
 
 [[package]]
@@ -1439,6 +1461,15 @@ dependencies = [
 
 [[package]]
 name = "mqttbytes"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11df9e74db0d738afc4db843d97d573873d4801af8f2978ab91f6539c4328ac0"
+dependencies = [
+ "bytes 1.0.1",
+]
+
+[[package]]
+name = "mqttbytes"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d710573f2144656d97b82b7ad85c464a1c35ae065278fbee545d40034ec1de5a"
@@ -1701,6 +1732,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c"
 
 [[package]]
+name = "pollster"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb20dcc30536a1508e75d47dd0e399bb2fe7354dcf35cda9127f2bf1ed92e30e"
+
+[[package]]
 name = "ppv-lite86"
 version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1941,6 +1978,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "rumqttc"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72369253852adfb8c40b525e99871513b12561140de4701777e89819b43466d3"
+dependencies = [
+ "async-channel",
+ "bytes 1.0.1",
+ "http",
+ "log",
+ "mqttbytes 0.3.0",
+ "pollster",
+ "thiserror",
+ "tokio 1.9.0",
+ "tokio-rustls",
+ "webpki",
+]
+
+[[package]]
 name = "rumqttd"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1952,7 +2007,7 @@ dependencies = [
  "futures-util",
  "jemallocator",
  "log",
- "mqttbytes",
+ "mqttbytes 0.4.0",
  "pretty_env_logger",
  "rumqttlog",
  "serde 1.0.127",
@@ -1974,7 +2029,7 @@ dependencies = [
  "jackiechan",
  "log",
  "memmap",
- "mqttbytes",
+ "mqttbytes 0.4.0",
  "segments",
  "serde 1.0.127",
  "thiserror",
