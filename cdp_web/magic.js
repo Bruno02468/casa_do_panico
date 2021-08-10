@@ -44,6 +44,7 @@ function fetch_the_goods() {
 
 // auto fetch yay
 setInterval(fetch_the_goods, fetch_ival);
+fetch_the_goods();
 
 // updates the broker filter list
 function update_brokers() {
