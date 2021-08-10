@@ -22,6 +22,13 @@ function color() {
   return c;
 }
 
+// le chart
+chart = new Chart(chart_canvas.getContext("2d"), {
+  type: "line",
+  responsive: true,
+  data: {}
+});
+
 // fetch the goods
 function fetch_the_goods() {
   fetch(endpoint + "/messages/sensor")
@@ -63,12 +70,6 @@ function update_brokers() {
   sel_broker.value = prev;
 }
 
-chart = new Chart(chart_canvas.getContext("2d"), {
-  type: "line",
-  responsive: true,
-  data: {}
-});
-
 // we a lil' flattening
 function simpleflat(msg) {
   let flat = {};
@@ -88,7 +89,7 @@ function simpleflat(msg) {
 }
 
 // a chart do-over!
-function rechart(msgarr, lastn, topic) {
+function rechart(msgarr, lastn, topic, chart) {
   let labels = [];
   let datasets = [];
   let flats_per_sensor = {};
@@ -133,5 +134,5 @@ function u(was_auto) {
   let lastn = in_lastn.value;
   let topic = sel_topic.value;
   let msgarr = per_broker[broker] || [];
-  rechart(msgarr, lastn, topic);
+  rechart(msgarr, lastn, topic, chart);
 }
